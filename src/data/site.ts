@@ -3,10 +3,9 @@ export const SITE = {
   shortName: 'ACAI Warranty',
   url: 'https://acaiwarranty.com',
   email: 'info@acaiwarranty.com',
-  // Placeholder number: not a verified customer-support line. Replace before launch.
-  phoneDisplay: '(202) 555-0147',
-  phoneHref: 'tel:+12025550147',
-  location: 'United States',
+  phoneDisplay: '+1 (812) 247-5929',
+  phoneHref: 'tel:+18122475929',
+  location: '30 N Gould St #70882; Sheridan, WY 82801',
   tagline: 'Auto & Home Protection Solutions',
   description:
     'ACAI Warranty LLC helps American drivers and homeowners explore auto and home warranty protection options with clarity and confidence.',

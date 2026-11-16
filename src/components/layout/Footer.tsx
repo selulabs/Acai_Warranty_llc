@@ -43,20 +43,10 @@ export default function Footer() {
                 <a href={SITE.phoneHref} className="transition-colors hover:text-white hover:underline underline-offset-4">
                   {SITE.phoneDisplay}
                 </a>
-                <span className="block text-xs text-neutral-300">Placeholder number</span>
               </li>
               <li>{SITE.location}</li>
             </ul>
           </div>
-        </div>
-
-        <div className="mt-14 rounded-lg border border-white/15 bg-primary-900/40 p-6">
-          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white">Coverage Disclaimer</h3>
-          <p className="mt-3 text-[13px] leading-[1.6] text-neutral-200">
-            Coverage, eligibility, exclusions, deductibles, waiting periods, service fees, and benefits vary according to the
-            applicable plan and contract. Final coverage terms are determined by the actual agreement. Information on this
-            website is for general guidance only and does not constitute a contract, offer, or guarantee of coverage.
-          </p>
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-white/15 pt-6 text-[13px] text-neutral-300 sm:flex-row sm:items-center sm:justify-between">

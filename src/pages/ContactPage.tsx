@@ -48,9 +48,6 @@ export default function ContactPage() {
                   <a href={SITE.phoneHref} className="font-semibold text-accent-700 underline-offset-4 hover:underline">
                     {SITE.phoneDisplay}
                   </a>
-                  <span className="mt-1 block rounded-lg bg-warning-50 px-3 py-2 text-sm text-warning-700">
-                    Placeholder number. Not yet verified as a customer support line.
-                  </span>
                 </dd>
               </div>
             </div>

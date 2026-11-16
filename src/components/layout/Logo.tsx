@@ -1,5 +1,3 @@
-import { ShieldCheck } from 'lucide-react';
-
 interface LogoProps {
   tone?: 'dark' | 'light';
 }
@@ -8,11 +6,13 @@ export default function Logo({ tone = 'dark' }: LogoProps) {
   const isLight = tone === 'light';
   return (
     <span className="inline-flex items-center gap-3">
-      <span
-        className={`grid h-10 w-10 place-items-center rounded-lg ${isLight ? 'bg-white text-primary-700' : 'bg-primary-600 text-white'}`}
-      >
-        <ShieldCheck size={22} strokeWidth={2.2} aria-hidden="true" />
-      </span>
+      <img
+        src="/favicon.svg"
+        alt=""
+        width={40}
+        height={40}
+        className="h-10 w-10 shrink-0 rounded-lg bg-white object-contain"
+      />
       <span className="flex flex-col leading-none">
         <span className={`font-display text-[17px] font-bold tracking-[0.12em] ${isLight ? 'text-white' : 'text-primary-700'}`}>
           ACAI
