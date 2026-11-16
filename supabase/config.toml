@@ -1,0 +1,6 @@
+project_id = "warranty-quote-form"
+
+# Guest quote requests do not have a signed-in user's JWT. The handler validates
+# payloads and the honeypot and requires an exact allowlisted browser origin.
+[functions.submit-quote]
+verify_jwt = false

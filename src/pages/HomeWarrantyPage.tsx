@@ -82,7 +82,7 @@ export default function HomeWarrantyPage() {
         eyebrow="Home Warranty"
         title="Protect Your Home. Preserve Your Peace of Mind."
         description="Explore home warranty protection options for eligible household systems and appliances, helping you prepare for unexpected breakdowns."
-        primaryCta={{ label: 'Get Home Warranty Quote', to: '/contact' }}
+        primaryCta={{ label: 'Get Home Warranty Quote', to: '/contact?service=home' }}
         secondaryCta={{ label: 'How It Works', to: '/how-it-works' }}
       />
 
@@ -146,7 +146,7 @@ export default function HomeWarrantyPage() {
         bullets={['Plan around possible repair costs', 'Convenient, structured service requests', 'Review terms before you commit', 'Clear contract details in writing']}
         image={IMAGES.diningRoom}
         imageAlt="Dining room with a grand chandelier and classic furniture"
-        cta={{ label: 'Request a Home Quote', to: '/contact', variant: 'outline' }}
+        cta={{ label: 'Request a Home Quote', to: '/contact?service=home', variant: 'outline' }}
       />
 
       <section className="border-y border-neutral-200 bg-white py-20 lg:py-24">
@@ -181,7 +181,7 @@ export default function HomeWarrantyPage() {
         imageAlt="Stylish kitchen with wooden cabinets and large windows"
         title="Protect the Home You Care About."
         description="Tell us about your property and the systems you want to explore. We will help you review the options that apply."
-        cta={{ label: 'Get Home Warranty Quote', to: '/contact' }}
+        cta={{ label: 'Get Home Warranty Quote', to: '/contact?service=home' }}
       />
     </>
   );

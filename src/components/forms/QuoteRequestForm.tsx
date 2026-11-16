@@ -1,16 +1,20 @@
-import { useState, type FormEvent } from 'react';
-import { CircleCheck, Info, LoaderCircle } from 'lucide-react';
+import { useRef, useState, type FormEvent } from 'react';
+import { CircleCheck, LoaderCircle } from 'lucide-react';
 import FormField, { inputClass } from '@/components/forms/FormField';
 import { Button } from '@/components/ui/Button';
 import { buildQuotePayload, submitQuoteRequest } from '@/lib/quoteSubmission';
 import { validateQuoteForm } from '@/lib/validation';
-import type { QuoteFormErrors, QuoteFormValues, QuoteRequestPayload } from '@/types/quote';
+import type { PlanId, ServiceType, QuoteFormErrors, QuoteFormValues } from '@/types/quote';
+import { PROPERTY_TYPES, SYSTEM_OPTIONS } from '../../../supabase/functions/_shared/quote';
+import { PROTECTION_PLANS } from '@/data/plans';
 
 const INITIAL_VALUES: QuoteFormValues = {
   fullName: '',
   email: '',
   phone: '',
   serviceType: '',
+  selectedPlan: '',
+  website: '',
   vehicleMake: '',
   vehicleModel: '',
   vehicleYear: '',
@@ -22,34 +26,33 @@ const INITIAL_VALUES: QuoteFormValues = {
   consentToContact: false,
 };
 
-const SYSTEM_OPTIONS = [
-  'HVAC system',
-  'Plumbing',
-  'Electrical',
-  'Refrigerator',
-  'Oven or range',
-  'Dishwasher',
-  'Washer and dryer',
-  'Other',
-];
-
-const PROPERTY_TYPES = ['Single-family home', 'Townhouse', 'Condominium', 'Multi-family', 'Other'];
-
 const SERVICE_OPTIONS = [
   { value: 'auto', label: 'Auto Warranty', description: 'Vehicle service contract options' },
   { value: 'home', label: 'Home Warranty', description: 'Home systems and appliance protection' },
 ] as const;
 
-type SubmitState = 'idle' | 'submitting' | 'preview';
+type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
-export default function QuoteRequestForm() {
-  const [values, setValues] = useState<QuoteFormValues>(INITIAL_VALUES);
+interface QuoteRequestFormProps {
+  initialServiceType?: ServiceType | '';
+  initialPlan?: PlanId | '';
+}
+
+export default function QuoteRequestForm({ initialServiceType = '', initialPlan = '' }: QuoteRequestFormProps) {
+  const [values, setValues] = useState<QuoteFormValues>({ ...INITIAL_VALUES, serviceType: initialServiceType, selectedPlan: initialPlan });
   const [errors, setErrors] = useState<QuoteFormErrors>({});
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
-  const [previewPayload, setPreviewPayload] = useState<QuoteRequestPayload | null>(null);
+  const [submissionError, setSubmissionError] = useState('');
+  const requestId = useRef<string | null>(null);
+  const submitting = useRef(false);
 
   const update = <K extends keyof QuoteFormValues>(key: K, value: QuoteFormValues[K]) => {
-    setValues((previous) => ({ ...previous, [key]: value }));
+    if (submitting.current) return;
+    requestId.current = null;
+    setSubmissionError('');
+    setValues((previous) => ({ ...previous, [key]: value,
+      ...(key === 'serviceType' && value !== 'auto' ? { selectedPlan: '' as const } : {}),
+    }));
     setErrors((previous) => {
       if (!previous[key]) return previous;
       const next = { ...previous };
@@ -67,6 +70,7 @@ export default function QuoteRequestForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submitting.current) return;
     const validationErrors = validateQuoteForm(values);
     setErrors(validationErrors);
 
@@ -76,10 +80,19 @@ export default function QuoteRequestForm() {
       return;
     }
 
+    submitting.current = true;
     setSubmitState('submitting');
-    const result = await submitQuoteRequest(buildQuotePayload(values));
-    setPreviewPayload(result.payload);
-    setSubmitState('preview');
+    setSubmissionError('');
+    try {
+      requestId.current ??= crypto.randomUUID();
+      await submitQuoteRequest(buildQuotePayload(values, requestId.current));
+      setSubmitState('success');
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : 'Unable to send your request. Please try again.');
+      setSubmitState('error');
+    } finally {
+      submitting.current = false;
+    }
   };
 
   const describedBy = (key: keyof QuoteFormValues, hasHint = false) => {
@@ -89,19 +102,18 @@ export default function QuoteRequestForm() {
     return parts.length ? parts.join(' ') : undefined;
   };
 
-  if (submitState === 'preview' && previewPayload) {
+  if (submitState === 'success') {
     return (
       <div role="status" className="rounded-lg border border-accent-200 bg-accent-50 p-8 lg:p-10">
         <div className="flex items-start gap-4">
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-accent-600 text-white">
-            <Info size={24} aria-hidden="true" />
+            <CircleCheck size={24} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-800">Demo preview</p>
-            <h2 className="mt-2 text-[26px]">Your request has not been sent</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-800">Request received</p>
+            <h2 className="mt-2 text-[26px]">Thank you for your quote request</h2>
             <p className="mt-3 text-[15px] text-neutral-700">
-              This form is not yet connected to our quote inbox. Nothing you entered has been transmitted or stored. Once the
-              connection is live, this step will send your request to our team.
+              Your request has been received. We will review the information you provided.
             </p>
           </div>
         </div>
@@ -109,16 +121,21 @@ export default function QuoteRequestForm() {
         <dl className="mt-8 grid gap-5 rounded-lg bg-white p-6 text-[15px] sm:grid-cols-2">
           <div>
             <dt className="font-semibold text-neutral-500">Name</dt>
-            <dd className="mt-1 text-black">{previewPayload.fullName}</dd>
+            <dd className="mt-1 text-black">{values.fullName.trim()}</dd>
           </div>
           <div>
             <dt className="font-semibold text-neutral-500">Protection type</dt>
-            <dd className="mt-1 text-black">{previewPayload.serviceType === 'auto' ? 'Auto Warranty' : 'Home Warranty'}</dd>
+            <dd className="mt-1 text-black">{values.serviceType === 'auto' ? 'Auto Warranty' : 'Home Warranty'}</dd>
           </div>
         </dl>
 
-        <Button variant="outline" className="mt-8" onClick={() => setSubmitState('idle')}>
-          Edit my request
+        <Button variant="outline" className="mt-8" onClick={() => {
+          setValues({ ...INITIAL_VALUES, serviceType: initialServiceType, selectedPlan: initialPlan });
+          requestId.current = null;
+          setErrors({});
+          setSubmitState('idle');
+        }}>
+          Submit another request
         </Button>
       </div>
     );
@@ -128,7 +145,12 @@ export default function QuoteRequestForm() {
   const isHome = values.serviceType === 'home';
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-10" aria-label="Free warranty quote request">
+    <form onSubmit={handleSubmit} noValidate className="space-y-10" aria-label="Free warranty quote request" aria-busy={submitState === 'submitting'}>
+      <div hidden aria-hidden="true">
+        <label htmlFor="quote-website">Website</label>
+        <input id="quote-website" name="website" type="text" tabIndex={-1} autoComplete="off"
+          value={values.website} onChange={(event) => update('website', event.target.value)} />
+      </div>
       <fieldset className="space-y-4">
         <legend className="text-sm font-semibold text-black">
           Which protection are you interested in?<span className="ml-1 text-secondary-600" aria-hidden="true">*</span>
@@ -160,6 +182,12 @@ export default function QuoteRequestForm() {
           </p>
         )}
       </fieldset>
+
+      {values.selectedPlan && (
+        <p className="text-sm text-neutral-600">
+          Selected plan: {PROTECTION_PLANS.find((plan) => plan.id === values.selectedPlan)?.name}
+        </p>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <FormField id="quote-fullName" label="Full name" error={errors.fullName}>
@@ -278,12 +306,14 @@ export default function QuoteRequestForm() {
               className={inputClass(Boolean(errors.propertyZip))}
             />
           </FormField>
-          <FormField id="quote-propertyType" label="Property type" optional>
+          <FormField id="quote-propertyType" label="Property type" optional error={errors.propertyType}>
             <select
               id="quote-propertyType"
               value={values.propertyType}
+              aria-invalid={Boolean(errors.propertyType)}
+              aria-describedby={describedBy('propertyType')}
               onChange={(e) => update('propertyType', e.target.value)}
-              className={inputClass(false)}
+              className={inputClass(Boolean(errors.propertyType))}
             >
               <option value="">Select a property type</option>
               {PROPERTY_TYPES.map((type) => (
@@ -311,18 +341,21 @@ export default function QuoteRequestForm() {
               ))}
             </div>
           </fieldset>
+          {errors.systemsOfInterest && <p role="alert" className="text-sm font-medium text-error-700">{errors.systemsOfInterest}</p>}
         </div>
       )}
 
-      <FormField id="quote-message" label="Message" optional>
+      <FormField id="quote-message" label="Message" optional error={errors.message}>
         <textarea
           id="quote-message"
           rows={5}
           maxLength={1000}
+          aria-invalid={Boolean(errors.message)}
+          aria-describedby={describedBy('message')}
           value={values.message}
           onChange={(e) => update('message', e.target.value)}
           placeholder="Tell us what you would like to protect or any questions you have."
-          className={inputClass(false)}
+          className={inputClass(Boolean(errors.message))}
         />
       </FormField>
 
@@ -349,6 +382,8 @@ export default function QuoteRequestForm() {
         )}
       </div>
 
+      {submissionError && <p role="alert" className="text-sm font-medium text-error-700">{submissionError}</p>}
+
       <div className="flex flex-col gap-4 border-t border-neutral-200 pt-8 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-md text-sm text-neutral-500">
           Submitting this form is not a purchase or enrollment. Coverage terms are set by your contract.
@@ -357,7 +392,7 @@ export default function QuoteRequestForm() {
           {submitState === 'submitting' ? (
             <>
               <LoaderCircle size={20} className="animate-spin" aria-hidden="true" />
-              Preparing preview
+              Sending request
             </>
           ) : (
             <>

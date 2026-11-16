@@ -50,7 +50,7 @@ export default function PlanCard({ plan, showSummary = false }: PlanCardProps) {
         </ul>
 
         <div className="mt-auto pt-8">
-          <ButtonLink to="/contact" variant={isMaintenance ? 'outline' : 'primary'} className="w-full">
+          <ButtonLink to={`/contact?service=auto&plan=${plan.id}`} variant={isMaintenance ? 'outline' : 'primary'} className="w-full">
             Request a Quote for {plan.name}
           </ButtonLink>
           <p className="mt-4 text-xs leading-[1.5] text-neutral-500">

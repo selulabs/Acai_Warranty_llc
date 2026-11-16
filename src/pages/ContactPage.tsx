@@ -4,9 +4,13 @@ import { IMAGES } from '@/data/images';
 import { SITE } from '@/data/site';
 import { PAGE_META, useDocumentHead } from '@/lib/seo';
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { getQuotePreselection } from '../../supabase/functions/_shared/quote';
 
 export default function ContactPage() {
   useDocumentHead(PAGE_META.contact);
+  const [searchParams] = useSearchParams();
+  const { serviceType, selectedPlan } = getQuotePreselection(searchParams.get('service'), searchParams.get('plan'));
 
   return (
     <>
@@ -65,7 +69,7 @@ export default function ContactPage() {
           <h2 className="text-[26px]">Request your free quote</h2>
           <p className="mt-3 text-[16px] text-neutral-600">Fields marked with an asterisk are required.</p>
           <div className="mt-10">
-            <QuoteRequestForm />
+            <QuoteRequestForm key={`${serviceType}:${selectedPlan}`} initialServiceType={serviceType} initialPlan={selectedPlan} />
           </div>
         </div>
       </section>

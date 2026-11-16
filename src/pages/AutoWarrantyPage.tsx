@@ -68,7 +68,7 @@ export default function AutoWarrantyPage() {
         eyebrow="Auto Warranty"
         title="Drive With Confidence. Protect What Moves You."
         description="Explore vehicle service contract options that help you prepare for eligible mechanical breakdown repair expenses."
-        primaryCta={{ label: 'Get Auto Warranty Quote', to: '/contact' }}
+        primaryCta={{ label: 'Get Auto Warranty Quote', to: '/contact?service=auto' }}
         secondaryCta={{ label: 'View Protection Plans', to: '/protection-plans' }}
       />
 
@@ -164,7 +164,7 @@ export default function AutoWarrantyPage() {
         imageAlt="Close-up of engine components under a car hood"
         title="Find the Right Vehicle Protection for Your Drive."
         description="Share your vehicle details and we will help you explore the protection options available."
-        cta={{ label: 'Get Auto Warranty Quote', to: '/contact' }}
+        cta={{ label: 'Get Auto Warranty Quote', to: '/contact?service=auto' }}
       />
     </>
   );

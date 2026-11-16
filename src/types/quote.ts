@@ -1,10 +1,13 @@
-export type ServiceType = 'auto' | 'home';
+import type { PlanId, ServiceType } from '../../supabase/functions/_shared/quote';
+export type { PlanId, ServiceType, QuoteRequestPayload } from '../../supabase/functions/_shared/quote';
 
 export interface QuoteFormValues {
   fullName: string;
   email: string;
   phone: string;
   serviceType: ServiceType | '';
+  selectedPlan: PlanId | '';
+  website: string;
   vehicleMake: string;
   vehicleModel: string;
   vehicleYear: string;
@@ -18,19 +21,6 @@ export interface QuoteFormValues {
 
 export type QuoteFormErrors = Partial<Record<keyof QuoteFormValues, string>>;
 
-export interface QuoteRequestPayload {
-  fullName: string;
-  email: string;
-  phone: string;
-  serviceType: ServiceType;
-  vehicle: { make: string; model: string; year: number; mileage: number | null } | null;
-  property: { zip: string; type: string | null; systemsOfInterest: string[] } | null;
-  message: string | null;
-  consentToContact: true;
-  submittedAt: string;
-}
-
 export interface QuoteSubmissionResult {
-  mode: 'preview';
-  payload: QuoteRequestPayload;
+  success: true;
 }

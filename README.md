@@ -32,7 +32,45 @@ Update `phoneDisplay` and `phoneHref` in `src/data/site.ts`. The number is curre
 
 ## Supabase form integration
 
-The quote form is frontend-only and does not send or store anything. To connect it, replace the body of `submitQuoteRequest` in `src/lib/quoteSubmission.ts` with an insert into your quote requests table. The payload type is `QuoteRequestPayload` in `src/types/quote.ts`. The form component does not need to change.
+The Contact page submits to the `submit-quote` Edge Function. It validates the request, saves the lead in `public.quote_requests`, then attempts a Resend notification. The table has RLS enabled, no public policies, and no grants to `anon` or `authenticated`. Only the function's server-side service role can write leads. No scheduled retries are configured.
+
+### Setup
+
+1. Create a Supabase project; copy its Project URL and publishable key from the project settings.
+2. In Supabase **SQL Editor**, paste and run `supabase/migrations/20261116000100_create_quote_requests.sql` once. If you previously created a quote table, reconcile its schema before running this migration.
+3. In **Edge Functions → Secrets**, set these values directly (not in frontend files):
+
+   | Name | Value |
+   | --- | --- |
+   | `RESEND_API_KEY` | Your Resend sending API key |
+   | `QUOTE_FROM_EMAIL` | Your verified sender address, optionally with a display name |
+   | `QUOTE_TO_EMAIL` | One recipient address, or comma-separated recipient addresses |
+   | `ALLOWED_ORIGINS` | Comma-separated exact website origins including scheme and port if present; no paths, trailing slashes, or wildcard |
+
+   Supabase supplies `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` inside hosted functions. Never expose those privileged credentials to the browser. Add the exact local-development origin to `ALLOWED_ORIGINS` when testing locally.
+4. Create a Resend account, add the sending domain/subdomain you own, and add its supplied SPF/return-path and DKIM DNS records. Review DMARC and preserve existing mailbox DNS records. Wait for verification. Resend does not create your receiving business mailbox.
+5. With Node 24 and the Supabase CLI available, run:
+
+   ```sh
+   npx supabase login
+   npx supabase link --project-ref YOUR_PROJECT_REF
+   npx supabase functions deploy submit-quote
+   ```
+
+   The function uses `verify_jwt = false` because visitors are not signed in. It requires an allowlisted Origin, validates the body server-side, and checks a honeypot. The publishable key is public, and CORS is not authentication: determined bots can forge Origin and bypass a honeypot. Add a server-verified CAPTCHA or persistent rate limit if needed.
+6. Copy `.env.example` to `.env`. Set only `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. Add the same public values in Vercel environment settings and redeploy. No Resend keys, service-role keys, database passwords, recipients, or sender configuration belong in frontend environment variables.
+7. Submit both an auto and a home request. Confirm the database row, full email contents, and Reply-To. Check the Resend dashboard and spam folder if delivery is missing.
+
+### Failure behavior and verification
+
+- The form shows success only after the server confirms persistence. Email failures do not undo the lead or produce a customer-facing error.
+- `email_status` starts as `pending`, becomes `sent` when Resend accepts the message, or `failed` if sending/configuration fails. `sent` does not guarantee inbox delivery. A crash or failed status update can leave `pending`; inspect function logs and reconcile manually. There are no automatic retries.
+- Request UUIDs prevent duplicate inserts/emails for retries of the same unchanged form. Editing the form starts a new request. No personal information or provider errors are returned to the browser or logged by the handler.
+- Server timestamps are authoritative. The honeypot is never saved or emailed. Notification content is plain text, and its recipient/sender cannot be supplied by the browser.
+- Test invalid fields, consent, plan/service mismatches, honeypot, blocked origins, double submission, missing configuration, database failures, and email failures. Verify the public key cannot select, insert, update, or delete leads.
+- On Node 24, run `node tests/quote-submission.test.mjs`, `npm run typecheck`, `npm run lint`, and `npm run build`. The handler tests mock database/email services; real delivery and deployed RLS require the setup above.
+
+References: [Supabase guest function configuration](https://supabase.com/docs/guides/functions/auth), [function secrets](https://supabase.com/docs/guides/functions/secrets), [Resend domain verification](https://resend.com/docs/dashboard/domains/introduction).
 
 ## Before launch: content and legal review
 

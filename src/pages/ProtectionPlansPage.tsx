@@ -51,7 +51,7 @@ export default function ProtectionPlansPage() {
         eyebrow="Protection Plans"
         title="Explore Protection Built Around Your Drive."
         description="Compare four automotive plans, from comprehensive breakdown protection to routine maintenance planning. Coverage details depend on the contract you select."
-        primaryCta={{ label: 'Request a Quote', to: '/contact' }}
+        primaryCta={{ label: 'Request a Quote', to: '/contact?service=auto' }}
         secondaryCta={{ label: 'Compare Plans', to: '#compare' }}
         size="compact"
       />
@@ -127,7 +127,7 @@ export default function ProtectionPlansPage() {
         imageAlt="Mechanic lifting a car engine in a well-lit repair shop"
         title="Choose the Plan That Fits Your Drive."
         description="Tell us about your vehicle and we will walk through the plans, categories, and terms that apply."
-        cta={{ label: 'Request a Quote', to: '/contact' }}
+        cta={{ label: 'Request a Quote', to: '/contact?service=auto' }}
       />
     </>
   );
