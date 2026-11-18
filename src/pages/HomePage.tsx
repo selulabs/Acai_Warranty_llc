@@ -40,6 +40,7 @@ export default function HomePage() {
     <>
       <PageHero
         image={IMAGES.heroAuto}
+        mobileImage={IMAGES.heroAutoMobile}
         imageAlt="Black luxury sedan driving along a forest road in soft daylight"
         eyebrow="ACAI Warranty LLC"
         title="Protection That Goes Beyond the Expected."

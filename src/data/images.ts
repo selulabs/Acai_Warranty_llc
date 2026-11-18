@@ -3,6 +3,7 @@ const photo = (id: string) =>
 
 export const IMAGES = {
   heroAuto: photo('11877375'),
+  heroAutoMobile: 'https://images.pexels.com/photos/13527818/pexels-photo-13527818.jpeg?auto=compress&cs=tinysrgb&w=1080',
   heroHome: photo('186077'),
   sedanPair: photo('19978403'),
   sedanRoad: photo('32018030'),

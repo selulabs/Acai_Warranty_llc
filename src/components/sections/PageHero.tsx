@@ -8,6 +8,7 @@ interface CtaLink {
 
 interface PageHeroProps {
   image: string;
+  mobileImage?: string;
   imageAlt: string;
   title: string;
   description: string;
@@ -21,6 +22,7 @@ interface PageHeroProps {
 
 export default function PageHero({
   image,
+  mobileImage,
   imageAlt,
   title,
   description,
@@ -35,16 +37,19 @@ export default function PageHero({
 
   return (
     <section className={`relative isolate overflow-hidden bg-primary-900 text-white ${isCompact ? 'min-h-[420px]' : 'min-h-[640px] lg:min-h-[720px]'}`}>
-      <img
-        src={image}
-        alt={imageAlt}
-        width={2000}
-        height={1300}
-        fetchPriority="high"
-        decoding="async"
-        className="absolute inset-0 -z-20 h-full w-full object-cover"
-        style={{ objectPosition: imagePosition }}
-      />
+      <picture className="absolute inset-0 -z-20 h-full w-full">
+        {mobileImage && <source media="(max-width: 767px)" srcSet={mobileImage} />}
+        <img
+          src={image}
+          alt={mobileImage ? '' : imageAlt}
+          width={2000}
+          height={1300}
+          fetchPriority="high"
+          decoding="async"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: imagePosition }}
+        />
+      </picture>
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary-900/95 via-primary-900/75 to-primary-900/25" aria-hidden="true" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-primary-900/80 to-transparent" aria-hidden="true" />
 
