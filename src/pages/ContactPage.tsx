@@ -6,11 +6,15 @@ import { PAGE_META, useDocumentHead } from '@/lib/seo';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { getQuotePreselection } from '../../supabase/functions/_shared/quote';
+import { useEffect, useState } from 'react';
 
 export default function ContactPage() {
   useDocumentHead(PAGE_META.contact);
   const [searchParams] = useSearchParams();
-  const { serviceType, selectedPlan } = getQuotePreselection(searchParams.get('service'), searchParams.get('plan'));
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  const { serviceType, selectedPlan } = getQuotePreselection(
+    hydrated ? searchParams.get('service') : null, hydrated ? searchParams.get('plan') : null);
 
   return (
     <>

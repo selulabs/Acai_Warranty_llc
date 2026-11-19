@@ -1,3 +1,4 @@
+import { PROCESS_FAQS as FAQS } from '@/data/faqs';
 import CtaBanner from '@/components/sections/CtaBanner';
 import PageHero from '@/components/sections/PageHero';
 import ServiceSplit from '@/components/sections/ServiceSplit';
@@ -50,28 +51,7 @@ const PREPARE = [
   'Any questions about the terms you want to review before enrolling',
 ];
 
-const FAQS = [
-  {
-    question: 'How long does the quote process take?',
-    answer:
-      'Timing depends on the details of your request. We do not promise a specific response time until it is confirmed for ACAI Warranty LLC.',
-  },
-  {
-    question: 'Will my coverage start immediately?',
-    answer:
-      'Activation timing is defined in your contract. Review the effective date and any waiting periods before you enroll.',
-  },
-  {
-    question: 'Do I choose my own repair shop?',
-    answer:
-      'Repair arrangements depend on the contract you select. Check the service instructions in your contract for how repair facilities are chosen.',
-  },
-  {
-    question: 'What should I review before enrolling?',
-    answer:
-      'Review covered categories, exclusions, limitations, waiting periods, deductibles, and service fees. These details are set by the contract.',
-  },
-];
+
 
 export default function HowItWorksPage() {
   useDocumentHead(PAGE_META.howItWorks);

@@ -1,3 +1,4 @@
+import { AUTO_FAQS as FAQS } from '@/data/faqs';
 import CtaBanner from '@/components/sections/CtaBanner';
 import PageHero from '@/components/sections/PageHero';
 import PlanCard from '@/components/sections/PlanCard';
@@ -24,38 +25,7 @@ const START_STEPS = [
   { title: 'Enroll and keep your contract', text: 'Keep your contract handy for the service request process.' },
 ];
 
-const FAQS = [
-  {
-    question: 'What is a vehicle service contract?',
-    answer:
-      'A vehicle service contract is an agreement that may help pay for eligible mechanical repairs under the plan you choose. It is separate from the manufacturer warranty and from routine maintenance. Your contract defines what is covered.',
-  },
-  {
-    question: 'Which vehicle components may be covered?',
-    answer:
-      'Depending on the plan, eligible coverage may include engine, transmission, drivetrain, suspension, selected electrical systems, and other eligible components. The specific list appears in your contract.',
-  },
-  {
-    question: 'Are older vehicles eligible?',
-    answer:
-      'Eligibility is set by each contract. Share your vehicle year and mileage in the quote form and we will explain what is available for your vehicle.',
-  },
-  {
-    question: 'Does coverage include regular maintenance?',
-    answer:
-      'Mechanical breakdown plans do not cover routine maintenance. Pre-Paid Maintenance is a separate plan for eligible scheduled services such as oil changes and filter replacement.',
-  },
-  {
-    question: 'How do I submit a service request?',
-    answer:
-      'Follow the service request instructions in your contract. The steps for contacting the plan administrator and documenting a problem are included with your enrollment documents.',
-  },
-  {
-    question: 'Where can I find exclusions and limitations?',
-    answer:
-      'Exclusions, limitations, waiting periods, and fees are listed in your contract. Review them carefully before you enroll.',
-  },
-];
+
 
 export default function AutoWarrantyPage() {
   useDocumentHead(PAGE_META.auto);

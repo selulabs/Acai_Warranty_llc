@@ -1,6 +1,5 @@
 import type { QuoteFormValues, QuoteRequestPayload, QuoteSubmissionResult } from '@/types/quote';
 import { normalizePhone } from '@/lib/validation';
-import { getSupabaseClient } from '@/lib/supabase';
 
 export function buildQuotePayload(values: QuoteFormValues, requestId: string): QuoteRequestPayload {
   if (values.serviceType !== 'auto' && values.serviceType !== 'home') throw new Error('Choose a protection type.');
@@ -38,6 +37,7 @@ export function buildQuotePayload(values: QuoteFormValues, requestId: string): Q
 }
 
 export async function submitQuoteRequest(payload: QuoteRequestPayload): Promise<QuoteSubmissionResult> {
+  const { getSupabaseClient } = await import('@/lib/supabase');
   const { data, error } = await getSupabaseClient().functions.invoke<QuoteSubmissionResult>('submit-quote', {
     body: payload,
   });

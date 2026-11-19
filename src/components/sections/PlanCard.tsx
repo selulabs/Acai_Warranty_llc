@@ -1,3 +1,4 @@
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 import { Check } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import type { ProtectionPlan } from '@/data/plans';
@@ -18,7 +19,9 @@ export default function PlanCard({ plan, showSummary = false }: PlanCardProps) {
     >
       <div className="relative h-48 overflow-hidden">
         <img
-          src={plan.image}
+          src={imageAtWidth(plan.image, 960)}
+          srcSet={imageSrcSet(plan.image)}
+          sizes="(min-width: 1280px) 380px, (min-width: 768px) 50vw, 100vw"
           alt={plan.imageAlt}
           width={800}
           height={500}

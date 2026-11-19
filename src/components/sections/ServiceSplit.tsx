@@ -1,3 +1,4 @@
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 import { CheckCircle2 } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 
@@ -21,7 +22,9 @@ export default function ServiceSplit({ image, imageAlt, eyebrow, title, descript
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div className={`group relative overflow-hidden rounded-lg shadow-card ${reverse ? 'lg:order-2' : ''}`}>
           <img
-            src={image}
+            src={imageAtWidth(image, 960)}
+            srcSet={imageSrcSet(image)}
+            sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw"
             alt={imageAlt}
             width={2000}
             height={1300}

@@ -7,6 +7,7 @@ import { validateQuoteForm } from '@/lib/validation';
 import type { PlanId, ServiceType, QuoteFormErrors, QuoteFormValues } from '@/types/quote';
 import { PROPERTY_TYPES, SYSTEM_OPTIONS } from '../../../supabase/functions/_shared/quote';
 import { PROTECTION_PLANS } from '@/data/plans';
+import { trackQuoteLead } from '@/lib/analytics';
 
 const INITIAL_VALUES: QuoteFormValues = {
   fullName: '',
@@ -87,6 +88,9 @@ export default function QuoteRequestForm({ initialServiceType = '', initialPlan 
       requestId.current ??= crypto.randomUUID();
       await submitQuoteRequest(buildQuotePayload(values, requestId.current));
       setSubmitState('success');
+      try {
+        if (!values.website && values.serviceType) trackQuoteLead(requestId.current, values.serviceType, values.selectedPlan);
+      } catch { /* Optional measurement must never change a saved request's success. */ }
     } catch (error) {
       setSubmissionError(error instanceof Error ? error.message : 'Unable to send your request. Please try again.');
       setSubmitState('error');

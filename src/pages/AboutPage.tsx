@@ -1,3 +1,4 @@
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 import CtaBanner from '@/components/sections/CtaBanner';
 import PageHero from '@/components/sections/PageHero';
 import ServiceSplit from '@/components/sections/ServiceSplit';
@@ -89,7 +90,9 @@ export default function AboutPage() {
           ].map((service) => (
             <article key={service.title} className="group relative overflow-hidden rounded-lg">
               <img
-                src={service.image}
+                src={imageAtWidth(service.image, 960)}
+                srcSet={imageSrcSet(service.image)}
+                sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw"
                 alt={service.alt}
                 width={2000}
                 height={1300}

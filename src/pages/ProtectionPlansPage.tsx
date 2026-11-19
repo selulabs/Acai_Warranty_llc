@@ -1,3 +1,4 @@
+import { PLAN_FAQS as FAQS } from '@/data/faqs';
 import CtaBanner from '@/components/sections/CtaBanner';
 import ComparisonTable from '@/components/sections/ComparisonTable';
 import PageHero from '@/components/sections/PageHero';
@@ -12,33 +13,7 @@ import { PAGE_META, useDocumentHead } from '@/lib/seo';
 const BREAKDOWN_PLANS = PROTECTION_PLANS.filter((plan) => plan.category === 'breakdown');
 const MAINTENANCE_PLANS = PROTECTION_PLANS.filter((plan) => plan.category === 'maintenance');
 
-const FAQS = [
-  {
-    question: 'How do the breakdown plans differ?',
-    answer:
-      'Each plan lists a different set of categories. Platinum is positioned as the most comprehensive option, Gold balances engine, transmission, and suspension, and Powertrain focuses on essential mechanical components. The comparison table shows the general categories for each plan.',
-  },
-  {
-    question: 'Is Pre-Paid Maintenance a breakdown plan?',
-    answer:
-      'No. Pre-Paid Maintenance is a routine service plan for eligible scheduled maintenance such as oil changes and filter replacement. It does not provide mechanical breakdown protection.',
-  },
-  {
-    question: 'Does Platinum include roadside-related benefits?',
-    answer:
-      'Platinum is described as including roadside-related benefits. The specific benefits, limits, and conditions are defined in the contract, so please confirm them before enrolling.',
-  },
-  {
-    question: 'Do you publish prices on this page?',
-    answer:
-      'No. Pricing depends on your vehicle and selected plan and is shared during your quote review. This page does not list prices.',
-  },
-  {
-    question: 'What if a part I need is not listed?',
-    answer:
-      'Only the components named in your contract are covered. Review the covered list and the exclusions in your contract, or ask us during your quote review.',
-  },
-];
+
 
 export default function ProtectionPlansPage() {
   useDocumentHead(PAGE_META.plans);

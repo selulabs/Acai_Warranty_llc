@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#002C40"/>
+<rect x="65" y="145" width="280" height="280" rx="24" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" x="90" y="170" width="230" height="230" viewBox="391 0 800 800">
+  <g fill="#031F39">
+    <path d="M432 370 774.5 104 931 224v-69h66v120l111 94h-88L775 176 559 344v97c-17 1-34 4-51 9v-80z"/>
+    <path d="M727 259h39v39h-39zm56 0h39v39h-39zm-56 54h39v39h-39zm56 0h39v39h-39z"/>
+    <path fill-rule="evenodd" d="M433 601c-23-40-11-84 21-111 30-25 84-37 130-34 32-24 76-56 101-62 68-18 173-21 229-11 48 8 86 37 122 67 14 10 25 22 31 34-27-8-65-12-120-12-123 0-212 16-299 40-27 7-97 7-128 8-14 0-36-12-54-19-7-3-13 5-19 16 24 9 49 21 69 35l-70-10c-11-2-13 30-13 59zm171-146h236l31-55c2-3 1-5-4-5-51-6-131-2-183 10-15 4-52 30-80 50zm260-5c51-6 104-7 150-1-37-34-64-50-98-53-16-1-24 4-32 16-7 10-14 25-20 38z"/>
+    <path d="M605 552c42-22 128-48 184-52 48-4 83 20 81 73-7-28-23-50-49-50-30 0-52 34-59 77l-25 4c0-20 3-39 9-56 1-4-1-6-6-6-39 3-94 10-135 10z"/>
+  </g>
+  <path fill="#FF8000" d="M414 625c155 38 346 13 484-31 112-36 195-90 224-149 25-50 7-90-36-121 61 26 89 63 79 112-17 93-137 165-274 200-169 44-355 40-477-11z"/>
+</svg>
+
+<g fill="white" font-family="Arial, sans-serif">
+<text x="395" y="230" font-size="82" font-weight="700" letter-spacing="6">ACAI</text>
+<text x="395" y="300" font-size="54" font-weight="700">Warranty LLC</text>
+<text x="395" y="367" font-size="30" fill="#D6E6EE">Auto &amp; Home Protection Solutions</text>
+<text x="70" y="558" font-size="28" fill="#D6E6EE">acaiwarranty.com</text>
+</g><rect x="70" y="475" width="1060" height="5" rx="2" fill="#FF8000"/>
+</svg>

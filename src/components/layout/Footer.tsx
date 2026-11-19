@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Logo from '@/components/layout/Logo';
+import { PrivacyPreferencesButton } from '@/components/layout/AnalyticsConsent';
 import { FOOTER_GROUPS, SITE } from '@/data/site';
 
 export default function Footer() {
@@ -52,6 +53,7 @@ export default function Footer() {
         <div className="mt-10 flex flex-col gap-3 border-t border-white/15 pt-6 text-[13px] text-neutral-300 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {year} ACAI Warranty LLC. All rights reserved.</p>
           <p>Auto &amp; Home Protection Solutions</p>
+          <PrivacyPreferencesButton />
         </div>
       </div>
     </footer>

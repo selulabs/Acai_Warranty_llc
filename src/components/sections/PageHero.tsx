@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { ButtonLink } from '@/components/ui/Button';
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 
 interface CtaLink {
   label: string;
@@ -38,9 +39,11 @@ export default function PageHero({
   return (
     <section className={`relative isolate overflow-hidden bg-primary-900 text-white ${isCompact ? 'min-h-[420px]' : 'min-h-[640px] lg:min-h-[720px]'}`}>
       <picture className="absolute inset-0 -z-20 h-full w-full">
-        {mobileImage && <source media="(max-width: 767px)" srcSet={mobileImage} />}
+        {mobileImage && <source media="(max-width: 767px)" srcSet={imageSrcSet(mobileImage, [400, 640, 960, 1080]) ?? mobileImage} sizes="100vw" />}
         <img
-          src={image}
+          src={imageAtWidth(image, 1600)}
+          srcSet={imageSrcSet(image)}
+          sizes="100vw"
           alt={mobileImage ? '' : imageAlt}
           width={2000}
           height={1300}

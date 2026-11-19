@@ -1,3 +1,4 @@
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 import { ButtonLink } from '@/components/ui/Button';
 
 interface CtaBannerProps {
@@ -12,7 +13,9 @@ export default function CtaBanner({ image, imageAlt, title, description, cta }: 
   return (
     <section className="relative isolate overflow-hidden bg-primary-900 text-white">
       <img
-        src={image}
+        src={imageAtWidth(image, 960)}
+        srcSet={imageSrcSet(image)}
+        sizes="100vw"
         alt={imageAlt}
         width={2000}
         height={1000}

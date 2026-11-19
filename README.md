@@ -14,17 +14,17 @@ A multi-page marketing site for ACAI Warranty LLC built with React, TypeScript, 
 
 ## Deploy on Vercel
 
-Import the repository into Vercel. The default Vite settings work: build command `npm run build`, output directory `dist`. `vercel.json` rewrites all routes to the app so direct links and page refreshes work.
+Import the repository into Vercel. Use Node 24, build command `npm run build`, and output directory `dist`. The build prerenders every page into its own HTML file. `vercel.json` enables clean URLs, redirects www to non-www, applies security headers, and lets unmatched URLs return a real 404 instead of serving the homepage.
 
 ## Where things are configured
 
 - Company information (name, email, placeholder phone, navigation, footer links): `src/data/site.ts`
 - Photography: `src/data/images.ts`. Images are referenced from the Pexels CDN; replace with files in `public/` if you license your own.
 - Protection plans and comparison table: `src/data/plans.ts`
-- Page titles, descriptions, and canonical URLs: `src/lib/seo.ts`
+- Page metadata and content-update dates: `src/data/pageMeta.ts`; shared build/browser head generation: `src/lib/seoMetadata.ts`
 - Brand colors, fonts, and spacing: `tailwind.config.js` and `src/index.css`
 - Structured data, favicon, fonts: `index.html`, `public/favicon.svg`
-- Search engine files: `public/robots.txt`, `public/sitemap.xml`
+- Search engine files: `public/robots.txt`; sitemap generated into `dist/sitemap.xml` by `scripts/build.mjs`
 
 ## Replacing the placeholder phone number
 
@@ -84,6 +84,35 @@ References: [Supabase guest function configuration](https://supabase.com/docs/gu
 
 The design specifies GT America for headings and body. Its license files are not included. Place the font files in `public/fonts/` and add `@font-face` rules to `src/index.css`. Until then, the site uses Manrope and Inter from Google Fonts.
 
-## SEO limitation
+## SEO, static generation, and analytics
 
-This is a client-rendered single-page app. Route-specific titles, descriptions, and canonical URLs are set in the browser after load, while the homepage has default tags in `index.html`. For full crawler-visible prerendering of every route, add a prerendering step (for example, a static prerender script) as a follow-up.
+- `npm run build` builds browser assets, renders all nine pages and `404.html` with React, inserts the same route metadata/structured data used for browser navigation, and generates the sitemap. The temporary server bundle is deleted and is not deployed.
+- Update the relevant `PAGE_CONTENT_DATES` entry in `src/data/pageMeta.ts` only when that page's content, metadata, or structured data actually changes. These dates reflect the SEO content update on November 19, 2026; redeploying does not advance them. Add any new routes to both `src/App.tsx` and the metadata registry. Noindex pages are excluded from the sitemap.
+- `public/sitemap.xml` was replaced by build-time generation. Inspect the sitemap in `dist/` or on the deployed site, rather than during Vite development.
+- The existing logo is used for all favicon/app icons and `public/og-image.png` (1200×630). The optional `scripts/generate-brand-assets.mjs` utility regenerates them with local headless Chrome; normal deployments require no Chrome.
+- Images keep the existing crops/layouts and use responsive Pexels variants. The mobile homepage keeps its separately selected photo. Below-the-fold images stay lazy; only the hero gets high priority. Supabase is loaded only when submitting, reducing initial JavaScript.
+- The existing Google-hosted Manrope/Inter fonts, preconnects, and `display=swap` remain to preserve typography. GT America is not bundled or licensed here. Self-hosting matching licensed fonts can be evaluated separately.
+- Structured data contains verified Organization/WebSite information, breadcrumbs, the auto/home services, and the same FAQs displayed on the pages. It intentionally omits the mailing address, LocalBusiness, ratings, reviews, licensing, and unconfirmed state availability. FAQ markup does not promise Google FAQ rich results.
+- Vercel serves the generated `404.html` for unmatched routes. Vite's development/preview server is not a test of Vercel routing. HTTPS is enforced by Vercel; no redundant protocol redirect is added. `.vercel.app` hosts get an additional noindex response header. Canonicals point to the approved non-www production domain.
+- Security headers permit the site's existing image/font providers, standard Supabase project domains, and consented Google Analytics. If using a custom Supabase domain or adding another integration, update CSP deliberately and test it. HTML revalidates; hashed `/assets/` files are immutable.
+
+### Manual launch checklist
+
+1. In Vercel, select Node 24, build command `npm run build`, output `dist`; connect both apex and www domains. Keep existing Supabase public environment values.
+2. In GA4, create a Web data stream and copy the public measurement ID (`G-...`). Turn **Enhanced Measurement off**: this app sends its own SPA page views, lead and contact-click events, avoiding duplicate/automatic form or query-string collection. Leave Google Signals and advertising features disabled unless separately approved.
+3. Set `VITE_GA4_MEASUREMENT_ID` in local `.env` and Vercel Production, then redeploy. Without a valid ID the tag, banner, and preference control are disabled. No GA API secret or account credentials belong in frontend variables. Review analytics/consent/privacy configuration for the audiences served.
+4. Consent controls load no Google scripts or analytics requests until the visitor accepts. Reject and Accept have equal prominence. The footer preference control supports withdrawal; withdrawal disables collection, clears accessible GA cookies, and reloads the document when the preference is saved. Consent preference expires after 180 days. Quote contact consent is separate.
+5. Mark `generate_lead` as a GA4 key event. `contact_click` includes only `contact_method=phone|email` and is an intent signal. Lead events include only service type and selected plan, never form contents or request IDs. Page paths/referrers are sanitized; full query strings are not sent by app events. Denied/blocked analytics will undercount leads; use saved database leads as the business record.
+6. Add Domain property `acaiwarranty.com` in Google Search Console. Add its TXT verification record at the authoritative DNS provider, verify, retain the record, and submit `https://acaiwarranty.com/sitemap.xml`.
+7. Use URL Inspection → Test live URL → Request indexing for the homepage and primary services/plans. Import the verified property in Bing Webmaster Tools. In GA4 Admin → Product links → Search Console links, link the property/web stream.
+8. Verify production response codes: existing pages 200; an invented URL 404; www redirects permanently to non-www; HTTP redirects to HTTPS. Check View Source for content and per-route titles/canonicals, plus robots, sitemap, OG image/icons, and response headers.
+9. Test accept/reject/withdraw in a fresh browser; inspect network requests and GA4 DebugView/Realtime. Submit a genuine test quote, check the saved lead and notification, then confirm one conversion. Recheck direct quote links such as `/contact?service=auto&plan=gold`.
+10. Check PageSpeed Insights, mobile navigation/forms, Rich Results Test, Schema Markup Validator, and social previews. The Wyoming mailing address alone does not qualify for a Google Business Profile; only use a profile if the actual business model/location is eligible.
+
+### Local checks
+
+On Node 24: `npm run typecheck`, `npm run lint`, `npm run build`, `node tests/seo.test.mjs`, and `node tests/quote-submission.test.mjs`.
+
+For optional browser checks, start headless Chrome with `--remote-debugging-port=9222`. Make a temporary test build using `VITE_GA4_MEASUREMENT_ID=G-TESTSEO123 VITE_SUPABASE_URL=https://seo-test.supabase.co VITE_SUPABASE_PUBLISHABLE_KEY=public-placeholder npm run build`, then run `node tests/seo-browser.mjs`. The test serves local generated files and intercepts Google/Supabase requests; it sends no real analytics, leads or emails. Rebuild with your normal environment afterward. The real Vercel redirect/status behavior and Google delivery must still be checked after deployment.
+
+References: [Vite prerendering](https://vite.dev/guide/ssr#pre-rendering-ssg), [Vercel custom 404](https://vercel.com/kb/guide/custom-404-page), [Vercel clean URLs](https://vercel.com/docs/project-configuration/vercel-json), [Google basic consent mode](https://developers.google.com/tag-platform/security/concepts/consent-mode).

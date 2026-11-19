@@ -7,7 +7,7 @@ interface LegalSection {
 
 interface LegalDocumentProps {
   title: string;
-  intro: string;
+  intro?: string;
   sections: LegalSection[];
 }
 
@@ -17,12 +17,7 @@ export default function LegalDocument({ title, intro, sections }: LegalDocumentP
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent-700">Legal</p>
       <h1 className="mt-4 text-black">{title}</h1>
 
-      <div role="note" className="mt-8 rounded-lg border border-warning-500/40 bg-warning-50 p-5 text-[15px] text-warning-700">
-        <strong className="font-semibold">Draft for review.</strong> This page is a placeholder draft and must be reviewed by
-        ACAI Warranty LLC and qualified legal counsel before it is published or relied upon.
-      </div>
-
-      <p className="mt-8 text-[17px] text-neutral-600">{intro}</p>
+      {intro && <p className="mt-8 text-[17px] text-neutral-600">{intro}</p>}
 
       <div className="mt-12 space-y-10">
         {sections.map((section) => (

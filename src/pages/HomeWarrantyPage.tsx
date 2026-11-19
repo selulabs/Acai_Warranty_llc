@@ -1,3 +1,5 @@
+import { HOME_FAQS as FAQS } from '@/data/faqs';
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 import CtaBanner from '@/components/sections/CtaBanner';
 import PageHero from '@/components/sections/PageHero';
 import ServiceSplit from '@/components/sections/ServiceSplit';
@@ -38,38 +40,7 @@ const HOME_STEPS = [
   { title: 'Follow the service request process', text: 'Use the steps in your contract when a covered item needs service.' },
 ];
 
-const FAQS = [
-  {
-    question: 'What is a home warranty?',
-    answer:
-      'A home warranty is a home service contract that may help pay for eligible repairs or replacements of covered household systems and appliances, subject to the terms of your contract.',
-  },
-  {
-    question: 'How is it different from homeowners insurance?',
-    answer:
-      'Homeowners insurance addresses damage to your home from covered events such as fire or storms. A home warranty is a separate contract focused on the breakdown of covered systems and appliances. It is not a substitute for insurance.',
-  },
-  {
-    question: 'Which systems and appliances may be covered?',
-    answer:
-      'Plans may address HVAC, plumbing, electrical systems, and selected major appliances. Eligibility depends on the plan and contract. Items listed here are categories only and are not guaranteed to be covered.',
-  },
-  {
-    question: 'Are pre-existing problems covered?',
-    answer:
-      'Contracts commonly address conditions that exist before enrollment differently. Ask about pre-existing conditions during your quote review and check the exclusions in your contract.',
-  },
-  {
-    question: 'Are service fees involved?',
-    answer:
-      'Many home service contracts involve a service fee per service request. Any fees, amounts, and payment steps are defined in your contract. We recommend reviewing them before you enroll.',
-  },
-  {
-    question: 'How are service requests handled?',
-    answer:
-      'Follow the service request steps in your contract. Process timing, authorizations, and repair arrangements are governed by the contract terms.',
-  },
-];
+
 
 export default function HomeWarrantyPage() {
   useDocumentHead(PAGE_META.home);
@@ -109,7 +80,9 @@ export default function HomeWarrantyPage() {
               <article key={system.name} className="flex flex-col">
                 <div className="overflow-hidden rounded-lg">
                   <img
-                    src={system.image}
+                    src={imageAtWidth(system.image, 960)}
+                    srcSet={imageSrcSet(system.image)}
+                    sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw"
                     alt={system.alt}
                     width={2000}
                     height={1300}

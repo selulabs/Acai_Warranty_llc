@@ -1,3 +1,4 @@
+import { imageAtWidth, imageSrcSet } from '@/lib/responsiveImages';
 import { ShieldCheck } from 'lucide-react';
 import CtaBanner from '@/components/sections/CtaBanner';
 import PageHero from '@/components/sections/PageHero';
@@ -123,7 +124,9 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-10">
           <div className="relative overflow-hidden rounded-lg shadow-elevated">
             <img
-              src={IMAGES.kitchenModern}
+              src={imageAtWidth(IMAGES.kitchenModern, 960)}
+              srcSet={imageSrcSet(IMAGES.kitchenModern)}
+              sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw"
               alt="Bright modern kitchen with clean cabinetry and built-in appliances"
               width={2000}
               height={1300}

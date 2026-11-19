@@ -8,30 +8,31 @@ export default function TermsPage() {
   return (
     <LegalDocument
       title="Terms & Conditions"
-      intro="These website terms describe how visitors may use this site. They do not form a vehicle service contract or a home service contract. Those agreements are provided separately."
       sections={[
         {
-          heading: 'Website information',
+          heading: 'About these terms',
           paragraphs: [
-            'Content on this site is provided for general information about auto and home warranty protection. It is not an offer, a quote, or a guarantee of coverage.',
-          ],
-        },
-        {
-          heading: 'Contracts govern coverage',
-          paragraphs: [
-            'Coverage, eligibility, exclusions, deductibles, waiting periods, service fees, and benefits vary by plan and contract. The applicable contract determines the final terms.',
+            `By using ${SITE.url}, you agree to these terms. Please read them before submitting a quote request.`,
           ],
         },
         {
           heading: 'Quote requests',
           paragraphs: [
-            '[To be completed: how quote requests are processed, expected response practices, and any limits on use of the contact form.]',
+            'Submitting a quote request is not a purchase, enrollment, or contract. Our team follows up by phone or email to discuss your request and plan options. Coverage begins only as provided in the actual agreement, including any applicable effective date and waiting periods.',
+            'Any prices or plan details shown on this website or discussed during a quote inquiry are for general guidance. Final pricing and terms are confirmed in the contract before enrollment.',
           ],
         },
         {
-          heading: 'Limitation of liability and governing law',
+          heading: 'Accuracy of information',
           paragraphs: [
-            '[To be completed by counsel: limitations of liability, governing law, and dispute resolution for ' + SITE.name + '.]',
+            'You must provide accurate contact, vehicle, and property details, as applicable to your request, so that quotes and eligibility checks are based on correct information.',
+          ],
+        },
+        {
+          heading: 'Limitation of liability',
+          paragraphs: [
+            'Website information is for general guidance only. Coverage, eligibility, exclusions, deductibles, waiting periods, fees, and benefits are set by the actual plan and contract.',
+            `${SITE.name} is not responsible for decisions made by relying on website content alone. Review the actual agreement before deciding whether to enroll.`,
           ],
         },
       ]}
