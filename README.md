@@ -14,7 +14,7 @@ A multi-page marketing site for ACAI Warranty LLC built with React, TypeScript, 
 
 ## Deploy on Vercel
 
-Import the repository into Vercel. Use Node 24, build command `npm run build`, and output directory `dist`. The build prerenders every page into its own HTML file. `vercel.json` enables clean URLs, redirects www to non-www, applies security headers, and lets unmatched URLs return a real 404 instead of serving the homepage.
+Import the repository into Vercel. Use Node 24, build command `npm run build`, and output directory `dist`. The build prerenders every page into its own HTML file. `vercel.json` enables clean URLs, redirects www to non-www, applies security headers, and lets unmatched URLs return a real 404 instead of serving the homepage.http://localhost:5173/
 
 ## Where things are configured
 
