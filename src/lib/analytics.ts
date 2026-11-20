@@ -14,7 +14,7 @@ const recordedLeads = new Set<string>();
 
 declare global {
   interface Window {
-    dataLayer?: unknown[][];
+    dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
     [key: `ga-disable-${string}`]: boolean | undefined;
   }
@@ -57,7 +57,11 @@ export function applyAnalyticsConsent(choice: AnalyticsConsent | null) {
   if (!initialized) {
     initialized = true;
     window.dataLayer = window.dataLayer ?? [];
-    window.gtag = (...args) => { window.dataLayer!.push(args); };
+    // Google's gtag command queue expects Arguments objects, not plain arrays.
+    window.gtag = function gtag() {
+      // eslint-disable-next-line prefer-rest-params -- The gtag API requires native Arguments objects.
+      window.dataLayer!.push(arguments);
+    };
     window.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied',
       ad_user_data: 'denied', ad_personalization: 'denied' });
     window.gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'denied',
